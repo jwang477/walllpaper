@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wang.wallpaper.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.wang.wallpaper.entity.User">
+            <id property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="TINYINT"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="card" column="card" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="headPortrait" column="head_portrait" jdbcType="VARCHAR"/>
+            <result property="personalizedSignature" column="personalized_signature" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="enableFlag" column="enable_flag" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,username,nickname,
+        password,type,phone,
+        card,email,head_portrait,
+        personalized_signature,create_time,update_time,
+        enable_flag
+    </sql>
+    <select id="userWallList" resultType="com.wang.wallpaper.pojo.WallDTO">
+        SELECT
+            w.*
+        FROM
+            t_wall w
+        WHERE
+            w.create_by = #{userId}
+        order by w.create_time desc
+    </select>
+    <select id="commentUserList" resultType="com.wang.wallpaper.pojo.UserCommentVO">
+        SELECT
+            uc.*,w.wall_path,w.wall_name from t_user_comment uc
+                                                  LEFT JOIN t_wall w on uc.wall_id = w.wall_id
+        where uc.user_id = #{userId} order by uc.create_time desc
+    </select>
+</mapper>
